@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Préstamos - Biblioteca Aurora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background: linear-gradient(to right, #ffc1e3, #ffc1e3); }
+        .navbar-brand { font-weight: bold; font-size: 1.5rem; color: white !important; }
+        .nav-link { color: white !important; font-weight: 500; }
+        .nav-link:hover { text-decoration: underline; }
+        .hero { text-align: center; padding: 30px 20px; background: linear-gradient(to bottom, #ffc1e3, #ffeff7); border-radius: 20px; margin: 20px auto; max-width: 1100px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .hero h2 { color: #ff4da6; margin-bottom: 20px; }
+        table { width: 100%; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        table th, table td { padding: 12px 15px; text-align: center; }
+        table th { background: #ff66b2; color: white; }
+        table tr:nth-child(even) { background: #ffe6f0; }
+        .btn-primary { background-color: #ff66b2; border: none; }
+        .btn-primary:hover { background-color: #ff3385; }
+        .btn-success { background-color: #28a745; }
+        input, select { border-radius: 8px; border: 1px solid #ffb6c1; padding: 8px; }
+        footer { text-align: center; margin-top: 50px; padding: 20px; color: #ff4da6; }
+        .stats-card { border-radius: 15px; color: white; padding: 20px; }
+        .stats-title { font-weight: bold; margin-bottom: 10px; }
+        .stats-number { font-size: 1.8rem; font-weight: 700; }
+        .badge-active { background: linear-gradient(135deg, #ffc107, #ff9800); padding: 8px 15px; border-radius: 20px; }
+        .badge-returned { background: linear-gradient(135deg, #28a745, #20c997); padding: 8px 15px; border-radius: 20px; }
+        .modal-header { background: linear-gradient(to right, #ff66b2, #ff3385); color: white; }
+        .modal-header .btn-close { filter: brightness(0) invert(1); }
+        .form-label { color: #ff4da6; font-weight: 600; }
+        .alert-floating { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 300px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Biblioteca Aurora</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="books.html">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="loans.html">Préstamos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h2><i class="bi bi-journal-check me-2"></i>Préstamos</h2>
+        
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <input type="text" id="searchLoans" class="form-control" placeholder="Buscar por estudiante, libro o ID...">
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loanModal" onclick="openCreateLoanModal()">
+                    <i class="bi bi-plus-circle me-1"></i> Nuevo Préstamo
+                </button>
+            </div>
+        </div>
+
+        <table class="table table-hover" id="loansTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Libro</th>
+                    <th>Estudiante</th>
+                    <th>Fecha de préstamo</th>
+                    <th>Fecha de devolución</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="loansTableBody">
+                <tr><td colspan="7">Cargando...</td></tr>
+            </tbody>
+        </table>
+
+        <div class="row text-center mt-4">
+            <div class="col-md-4 mb-3">
+                <div class="stats-card" style="background: #ffb6c1;">
+                    <div class="stats-title">Total Préstamos</div>
+                    <div class="stats-number" id="totalLoans">0</div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="stats-card" style="background: #ff66b2;">
+                    <div class="stats-title">Devueltos</div>
+                    <div class="stats-number" id="returnedLoans">0</div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="stats-card" style="background: #ff3385;">
+                    <div class="stats-title">Activos</div>
+                    <div class="stats-number" id="activeLoans">0</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Crear Préstamo -->
+    <div class="modal fade" id="loanModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-journal-plus me-2"></i>Nuevo Préstamo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loanForm">
+                        <div class="mb-3">
+                            <label for="loanBook" class="form-label">Seleccionar Libro</label>
+                            <select class="form-select" id="loanBook" required>
+                                <option value="">-- Selecciona un libro --</option>
+                            </select>
+                            <div id="stockInfo" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loanStudent" class="form-label">Nombre del Estudiante</label>
+                            <input type="text" class="form-control" id="loanStudent" required placeholder="Ingrese el nombre completo">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="createLoan()">
+                        <i class="bi bi-check-circle me-1"></i>Registrar Préstamo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmar Devolución -->
+    <div class="modal fade" id="returnModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>Confirmar Devolución</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>¿Confirmas la devolución del préstamo?</p>
+                    <div id="returnLoanInfo" class="text-success"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="confirmReturnBtn">
+                        <i class="bi bi-check-circle me-1"></i>Confirmar Devolución
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error -->
+    <div class="modal fade" id="errorModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Error</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-x-circle text-danger" style="font-size: 4rem;"></i>
+                    <p class="mt-3" id="errorMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Biblioteca Aurora - Tu espacio rosita para aprender y disfrutar
+    </footer>
+
+    <script src="js/loans.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

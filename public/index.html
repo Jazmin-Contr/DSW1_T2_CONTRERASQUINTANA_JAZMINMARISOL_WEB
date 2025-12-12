@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Aurora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background: linear-gradient(to right, #ffc1e3, #ffc1e3); }
+        .navbar-brand { font-weight: bold; font-size: 1.5rem; color: white !important; }
+        .nav-link { color: white !important; font-weight: 500; }
+        .nav-link:hover { text-decoration: underline; }
+        .hero { text-align: center; padding: 120px 20px; background: linear-gradient(to bottom, #ffc1e3, #ffeff7); border-radius: 30px; margin: 20px auto; max-width: 900px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .hero img { max-width: 180px; margin-bottom: 30px; }
+        .hero h1 { font-size: 3rem; margin-bottom: 15px; color: #ff4da6; font-weight: 700; }
+        .hero p { font-size: 1.4rem; color: #ff4da6; margin-bottom: 30px; }
+        .hero .btn { border-radius: 50px; font-weight: bold; padding: 12px 25px; font-size: 1.1rem; transition: transform 0.2s; }
+        .hero .btn:hover { transform: scale(1.05); }
+        footer { text-align: center; margin-top: 50px; padding: 20px; color: #ff4da6; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Biblioteca Aurora</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="books.html">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="loans.html">Préstamos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <img src="https://cdn-icons-png.flaticon.com/512/29/29302.png" alt="Libro abierto">
+        <h1>Bienvenida a Biblioteca Aurora</h1>
+        <p>Descubre tus libros favoritos y lleva tus lecturas al siguiente nivel.</p>
+        <div>
+            <a href="books.html" class="btn btn-pink me-2" style="background: #ff66b2; color:white;"><i class="bi bi-book"></i> Ver Libros</a>
+            <a href="loans.html" class="btn btn-pink" style="background: #ff66b2; color:white;"><i class="bi bi-journal-check"></i> Ver Préstamos</a>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2025 Biblioteca Aurora - Tu espacio rosita para aprender y disfrutar
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

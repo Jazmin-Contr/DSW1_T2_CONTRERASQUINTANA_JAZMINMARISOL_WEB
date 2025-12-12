@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Aurora - Libros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: white; }
+        .navbar { background: linear-gradient(to right, #ffc1e3, #ffc1e3); }
+        .navbar-brand { font-weight: bold; font-size: 1.5rem; color: white !important; }
+        .nav-link { color: white !important; font-weight: 500; }
+        .nav-link:hover { text-decoration: underline; }
+        .hero { text-align: center; padding: 30px 20px; background: linear-gradient(to bottom, #ffc1e3, #ffeff7); border-radius: 20px; margin: 20px auto; max-width: 1100px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .hero h2 { color: #ff4da6; margin-bottom: 20px; }
+        table { width: 100%; background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        table th, table td { padding: 12px 15px; text-align: center; }
+        table th { background: #ff66b2; color: white; }
+        table tr:nth-child(even) { background: #ffe6f0; }
+        .btn-primary { background-color: #ff66b2; border: none; }
+        .btn-primary:hover { background-color: #ff3385; }
+        .btn-success { background-color: #28a745; }
+        input, select { border-radius: 8px; border: 1px solid #ffb6c1; padding: 8px; }
+        footer { text-align: center; margin-top: 50px; padding: 20px; color: #ff4da6; }
+        .stats-card { border-radius: 15px; color: white; padding: 20px; }
+        .stats-title { font-weight: bold; margin-bottom: 10px; }
+        .stats-number { font-size: 1.8rem; font-weight: 700; }
+        .modal-header { background: linear-gradient(to right, #ff66b2, #ff3385); color: white; }
+        .modal-header .btn-close { filter: brightness(0) invert(1); }
+        .form-label { color: #ff4da6; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">Biblioteca Aurora</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link active" href="books.html">Libros</a></li>
+                <li class="nav-item"><a class="nav-link" href="loans.html">Préstamos</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <h2><i class="bi bi-journal-bookmark me-2"></i>Libros</h2>
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <input type="text" id="searchBooks" class="form-control" placeholder="Buscar por título, autor o ISBN">
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary" onclick="openCreateBookModal()">
+                <i class="bi bi-plus-circle me-1"></i> Nuevo Libro
+            </button>
+        </div>
+    </div>
+
+    <table class="table table-hover" id="booksTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>ISBN</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="booksTableBody">
+            <tr><td colspan="6">Cargando...</td></tr>
+        </tbody>
+    </table>
+
+    <div class="row text-center mt-4">
+        <div class="col-md-4 mb-3">
+            <div class="stats-card" style="background: #ffb6c1;">
+                <div class="stats-title">Total Libros</div>
+                <div class="stats-number" id="totalBooks">0</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="stats-card" style="background: #ff66b2;">
+                <div class="stats-title">Con Stock</div>
+                <div class="stats-number" id="booksWithStock">0</div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="stats-card" style="background: #ff3385;">
+                <div class="stats-title">Sin Stock</div>
+                <div class="stats-number" id="booksNoStock">0</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal Crear / Editar Libro -->
+<div class="modal fade" id="bookModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="bookModalTitle" class="modal-title"><i class="bi bi-journal-plus me-2"></i>Nuevo Libro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bookForm" novalidate>
+                    <input type="hidden" id="bookId">
+                    <div class="mb-3">
+                        <label for="bookTitle" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="bookTitle" required>
+                        <div class="invalid-feedback">El título es requerido.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bookAuthor" class="form-label">Autor</label>
+                        <input type="text" class="form-control" id="bookAuthor" required>
+                        <div class="invalid-feedback">El autor es requerido.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bookIsbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" id="bookIsbn" required>
+                        <div class="invalid-feedback">El ISBN es requerido.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="bookStock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="bookStock" min="0" required>
+                        <div class="invalid-feedback">El stock es requerido (mínimo 0).</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSaveBook">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Libro -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Eliminar Libro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>¿Estás seguro de eliminar el libro <strong id="deleteBookTitle"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button id="confirmDeleteBtn" type="button" class="btn btn-danger">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    &copy; 2025 Biblioteca Aurora - Tu espacio rosita para aprender y disfrutar
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/books.js"></script>
+
+</body>
+</html>
